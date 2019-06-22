@@ -15,6 +15,8 @@ RUN dpkg -i libcjose0_0.6.1.5-1~bionic+1_amd64.deb
 RUN dpkg -i libcjose-dev_0.6.1.5-1~bionic+1_amd64.deb
 
 RUN a2enmod ssl
+RUN a2enmod proxy_http
+RUN a2enmod proxy
 RUN a2ensite default-ssl
 
 RUN echo "/usr/sbin/apache2ctl start && tail -f /var/log/apache2/error.log " >> /root/run.sh
@@ -33,5 +35,6 @@ WORKDIR /root
 
 ADD openidc.conf /etc/apache2/conf-available
 RUN a2enconf openidc
-RUN /usr/sbin/apache2ctl start
+RUN touch /var/log/apache2/access.log
+CMD /usr/sbin/apache2ctl start && tail -f /var/log/apache2/access.log
 
